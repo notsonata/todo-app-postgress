@@ -11,10 +11,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DB_HOST: db
-      DB_USER: postgres
-      DB_PASSWORD: postgrespass
-      DB_NAME: todo
+        DATABASE_URL: ${DATABASE_URL}
     # Ensure the directory is readable by Apache
     user: "www-data"  # run as the Apache user
     extra_hosts:

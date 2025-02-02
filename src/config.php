@@ -37,6 +37,22 @@ function connect_with_retry($retries = 5, $delay = 2) {
 // Fetch the database URL from environment variable or use defaults
 $db_url = getenv('DATABASE_URL') ?: 'postgres://postgres:password@localhost/todo';
 
+// If the database URL exists, parse it to set the connection parameters
+if ($db_url) {
+    $db_parts = parse_url($db_url);
+    $host = $db_parts['host'] ?? 'localhost';
+    $user = $db_parts['user'] ?? 'postgres';
+    $password = $db_parts['pass'] ?? '';
+    $database = ltrim($db_parts['path'], '/');
+    $connection_string = sprintf(
+        "host=%s dbname=%s user=%s password=%s",
+        $host,
+        $database,
+        $user,
+        $password
+    );
+}
+
 // Attempt to connect
 $db = connect_with_retry();
 
@@ -44,5 +60,4 @@ $db = connect_with_retry();
 if (!$db) {
     die("Connection failed: " . pg_last_error());
 }
-
 ?>
