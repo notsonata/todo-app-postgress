@@ -1,0 +1,162 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
+body {
+  background-color: olivedrab;
+}
+
+nav {
+  background-color: rgb(0, 90, 0);
+  margin-bottom: 50px;
+}
+
+.heading {
+  text-decoration: none;
+  color: white;
+  letter-spacing: 1px;
+  font-size: 30px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-area {
+  margin-bottom: 30px;
+}
+
+input {
+  width: 500px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.btn {
+  width: 100px;
+  height: 40px;
+  border-radius: 50px;
+  border: 1px solid rgb(0, 90, 0);
+  color: white;
+  font-weight: 900;
+  background-color: rgb(0, 90, 0);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: rgb(0, 120, 0);
+}
+
+table {
+  border: 0.5px solid black;
+  width: 700px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: whitesmoke;
+}
+
+th {
+  font-size: 20px;
+  text-align: start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+th:nth-child(4) {
+  text-align: center;
+}
+
+tr.border-bottom td {
+  border-bottom: 1pt dashed black;
+}
+
+tbody {
+  padding: 3px;
+  font-size: 15px;
+}
+
+td {
+  padding: 5px;
+}
+
+.action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-completed, .btn-remove {
+  text-decoration: none;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+}
+
+.btn-completed {
+  background-color: #28a745;
+  position: relative;
+}
+
+.btn-completed::before {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 16px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn-remove {
+  background-color: #dc3545;
+  position: relative;
+}
+
+.btn-remove::before {
+  content: "×";
+  position: absolute;
+  color: white;
+  font-size: 20px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Hover effects */
+.btn-completed:hover {
+  background-color: #218838;
+}
+
+.btn-remove:hover {
+  background-color: #c82333;
+}
+
+/* Optional: Add some transitions */
+.btn-completed, .btn-remove {
+  transition: background-color 0.2s ease;
+}
+
+/* Add a no-tasks message style */
+.no-tasks {
+  color: #666;
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+}
