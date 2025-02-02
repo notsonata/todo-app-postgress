@@ -15,6 +15,12 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgrespass
       DB_NAME: todo
+    # Ensure the directory is readable by Apache
+    user: "www-data"  # run as the Apache user
+    extra_hosts:
+      - "localhost:127.0.0.1"  # needed for local testing
+    networks:
+      - app-network
 
   db:
     image: postgres:15
@@ -33,6 +39,12 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

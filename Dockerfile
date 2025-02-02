@@ -13,8 +13,8 @@ RUN docker-php-ext-install \
     pdo_pgsql \
     pgsql
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache mod_rewrite and mod_dir
+RUN a2enmod rewrite dir
 
 # Set working directory
 WORKDIR /var/www/html
