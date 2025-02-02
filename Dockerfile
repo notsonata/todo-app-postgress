@@ -23,3 +23,6 @@ WORKDIR /var/www/html
 RUN echo '<Directory /var/www/html>\n\
     AllowOverride All\n\
 </Directory>' >> /etc/apache2/apache2.conf
+
+# Set DirectoryIndex to prioritize index.php
+RUN echo "DirectoryIndex index.php index.html" >> /etc/apache2/apache2.conf
