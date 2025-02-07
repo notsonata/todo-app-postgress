@@ -19,20 +19,21 @@ RUN a2enmod rewrite dir
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
-COPY *.php /var/www/html/
-COPY *.css /var/www/html/
+# Copy application files from the src directory
+COPY src/*.php /var/www/html/
+COPY src/*.css /var/www/html/
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Apache configuration to enable .htaccess and set proper permissions
+# Apache configuration to enable .htaccess and set DirectoryIndex
 RUN echo '<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' >> /etc/apache2/apache2.conf
+    DirectoryIndex index.php index.html\n\
+</Directory>' > /etc/apache2/sites-available/000-default.conf
 
-# Set DirectoryIndex
-RUN echo "DirectoryIndex index.php index.html" >> /etc/apache2/apache2.conf
+# Restart Apache to apply changes
+CMD ["apache2-foreground"]

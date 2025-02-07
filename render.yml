@@ -9,8 +9,8 @@ services:
           fromDatabase:
             name: todo-db
             property: connectionString
-  
-  databases:
+
+databases:
     - name: todo-db
       databaseName: todo
       plan: free
