@@ -7,19 +7,14 @@ init_database() {
     sleep 5
 
     if [ -n "$DATABASE_URL" ]; then
-        # Use regex pattern that matches Render's PostgreSQL URL format
+        # Production mode (Render)
         if [[ $DATABASE_URL =~ ^postgresql://([^:]+):([^@]+)@([^/]+)/(.+)$ ]]; then
             USER="${BASH_REMATCH[1]}"
             PASS="${BASH_REMATCH[2]}"
             HOST="${BASH_REMATCH[3]}"
             DB="${BASH_REMATCH[4]}"
 
-            echo "Attempting database connection..."
-            echo "Host: $HOST"
-            echo "Database: $DB"
-            echo "User: $USER"
-            
-            # Use the full DATABASE_URL directly
+            echo "Production mode: Connecting to Render PostgreSQL..."
             PGPASSWORD="$PASS" psql "$DATABASE_URL" -f /docker-entrypoint-initdb.d/init.sql
         else
             echo "Invalid DATABASE_URL format"
@@ -27,7 +22,16 @@ init_database() {
             exit 1
         fi
     else
-        echo "DATABASE_URL not set. Skipping database initialization."
+        # Local development mode
+        echo "Local development mode: Connecting to Docker PostgreSQL..."
+        # Wait for local PostgreSQL to be ready
+        until PGPASSWORD=postgrespass psql -h db -U postgres -d todo -c '\q' 2>/dev/null; do
+            echo "PostgreSQL is unavailable - sleeping"
+            sleep 1
+        done
+
+        echo "PostgreSQL is up - executing init script"
+        PGPASSWORD=postgrespass psql -h db -U postgres -d todo -f /docker-entrypoint-initdb.d/init.sql
     fi
 }
 

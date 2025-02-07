@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  php-apache:
+  web:  # Renamed from php-apache
     build: .
     ports:
       - "8080:80"
@@ -11,11 +11,10 @@ services:
       db:
         condition: service_healthy
     environment:
-        DATABASE_URL: ${DATABASE_URL}
-    # Ensure the directory is readable by Apache
-    user: "www-data"  # run as the Apache user
+      DATABASE_URL: ${DATABASE_URL}
+    user: "www-data"
     extra_hosts:
-      - "localhost:127.0.0.1"  # needed for local testing
+      - "localhost:127.0.0.1"
     networks:
       - app-network
 
