@@ -5,6 +5,7 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     postgresql-client \
+    dos2unix \
     zip \
     unzip
 
@@ -32,7 +33,8 @@ COPY src/*.css /var/www/html/
 
 # Copy and set up the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN dos2unix /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html \
