@@ -2,7 +2,32 @@ services:
     - type: web
       name: todo-app
       env: docker
-      buildCommand: docker build -t todo-app .
+      buildCommand: |
+        # Create the entrypoint script
+        echo '#!/bin/bash' > docker-entrypoint.sh
+        cat >> docker-entrypoint.sh <<'EOL'
+        set -e
+        # Function to initialize the database
+        init_database() {
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+            if [ -n "$DATABASE_URL" ]; then
+                USER=$(echo $DATABASE_URL | awk -F[:@] '{print $2}' | sed 's/\/\///')
+                PASS=$(echo $DATABASE_URL | awk -F[:@] '{print $3}')
+                HOST=$(echo $DATABASE_URL | awk -F[:@/] '{print $4}')
+                PORT=$(echo $DATABASE_URL | awk -F[:@/] '{print $5}')
+                DB=$(echo $DATABASE_URL | awk -F[:@/] '{print $6}')
+                echo "Initializing database..."
+                PGPASSWORD=$PASS psql -h $HOST -p $PORT -U $USER -d $DB -f /docker-entrypoint-initdb.d/init.sql
+            else
+                echo "DATABASE_URL not set. Skipping database initialization."
+            fi
+        }
+        init_database
+        apache2-foreground
+        EOL
+        chmod +x docker-entrypoint.sh
+        docker build -t todo-app .
       startCommand: docker run -p $PORT:80 todo-app
       envVars:
         - key: DATABASE_URL
