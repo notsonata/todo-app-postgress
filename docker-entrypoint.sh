@@ -7,24 +7,23 @@ init_database() {
     sleep 5
 
     if [ -n "$DATABASE_URL" ]; then
-        # Use proper URL parsing
-        if [[ $DATABASE_URL =~ ^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.+)$ ]]; then
+        # Use regex pattern that matches Render's PostgreSQL URL format
+        if [[ $DATABASE_URL =~ ^postgresql://([^:]+):([^@]+)@([^/]+)/(.+)$ ]]; then
             USER="${BASH_REMATCH[1]}"
             PASS="${BASH_REMATCH[2]}"
             HOST="${BASH_REMATCH[3]}"
-            PORT="${BASH_REMATCH[4]}"
-            DB="${BASH_REMATCH[5]}"
+            DB="${BASH_REMATCH[4]}"
 
             echo "Attempting database connection..."
             echo "Host: $HOST"
-            echo "Port: $PORT"
             echo "Database: $DB"
             echo "User: $USER"
             
-            export PGPASSWORD="$PASS"
-            psql "postgresql://$USER:$PASS@$HOST:$PORT/$DB" -f /docker-entrypoint-initdb.d/init.sql
+            # Use the full DATABASE_URL directly
+            PGPASSWORD="$PASS" psql "$DATABASE_URL" -f /docker-entrypoint-initdb.d/init.sql
         else
             echo "Invalid DATABASE_URL format"
+            echo "Expected format: postgresql://username:password@host/database"
             exit 1
         fi
     else
